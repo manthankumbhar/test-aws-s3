@@ -32,7 +32,7 @@ app.post("/songs", upload.single("song"), async (req, res) => {
   console.log(result);
   await unlinkFile(file.path);
   var imageKey = await result.Key;
-  res.status(200).send({ imagePath: `/images/${imageKey}` });
+  res.status(200).send({ success: `/songs/${imageKey}` });
 });
 
 app.listen(port, () => {
