@@ -1,11 +1,13 @@
 const express = require("express");
 const fs = require("fs");
+const cors = require("cors");
 const util = require("util");
 const unlinkFile = util.promisify(fs.unlink);
 require("dotenv").config();
 
 let port = process.env.PORT || 3000;
 const app = express();
+app.use(cors());
 
 const { uploadFile, getFileStream } = require("./s3");
 
@@ -26,10 +28,8 @@ app.get("/songs/:key", (req, res) => {
 
 app.post("/songs", upload.single("song"), async (req, res) => {
   const file = req.file;
-  console.log(file);
 
   const result = await uploadFile(file);
-  console.log(result);
   await unlinkFile(file.path);
   var songkey = await result.Key;
   res.status(200).send({ success: `${songkey}` });
